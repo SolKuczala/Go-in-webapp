@@ -3,31 +3,70 @@ package main
 import (
 	"log"
 	"net/http"
-	"os"
 
-	"github.com/gin-gonic/gin"
-	_ "github.com/heroku/x/hmetrics/onload"
+	"github.com/gorilla/mux"
 )
 
 func main() {
-	port := os.Getenv("PORT")
+	/*port := os.Getenv("PORT")
 
 	if port == "" {
 		log.Fatal("$PORT must be set")
-	}
+	}*/
+	router := mux.NewRouter()
+	router.HandleFunc("/api/v1/sing-up", signUp)              //post
+	router.HandleFunc("/api/v1/sing-up/google", signUpGoogle) //post
+	router.HandleFunc("/api/v1/login", login)                 //
+	router.HandleFunc("/api/v1/login/google", loginGoogle)
+	router.HandleFunc("/api/v1/user", userGetProfile)      //search get mux
+	router.HandleFunc("/api/v1/user", userEditProfile)     //search post mux
+	router.HandleFunc("/api/v1/logout", logout)            //post
+	router.HandleFunc("/api/v1/reset-pass", resetPassword) //must handle forgot/reset
 
-	router := gin.New()
-	router.Use(gin.Logger())
-	router.LoadHTMLGlob("templates/*.tmpl.html")
-	router.Static("/static", "static")
+	http.Handle("/", r)
+}
 
-	router.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.tmpl.html", nil)
+func loggingMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// Do stuff here
+		log.Println(r.RequestURI)
+		// Call the next handler, which can be another middleware in the chain, or the final handler.
+		next.ServeHTTP(w, r)
 	})
+}
 
-	router.GET("/test", func(c *gin.Context) {
-		c.String(http.StatusOK, "tarara")
-	})
+func signUp() {
 
-	router.Run(":" + port)
+}
+
+func signUpGoogle() {
+
+}
+
+func login() {
+
+}
+
+func loginGoogle() {
+
+}
+
+func userGetProfile() {
+
+}
+
+func userGetProfile() {
+
+}
+
+func userEditProfile() {
+
+}
+
+func logout() {
+
+}
+
+func resetPassword() {
+
 }

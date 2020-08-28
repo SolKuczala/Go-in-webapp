@@ -5,3 +5,4 @@ heroku git:remote -a so-ku
 git add/commit
 git push heroku master
 
+go get -u github.com/gorilla/mux
