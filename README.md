@@ -1,29 +1,48 @@
-# README #
 
-This README would normally document whatever steps are necessary to get your application up and running.
+# go-getting-started
 
-### What is this repository for? ###
+A barebones Go app, which can easily be deployed to Heroku.
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+This application supports the [Getting Started with Go on Heroku](https://devcenter.heroku.com/articles/getting-started-with-go) article - check it out.
 
-### How do I get set up? ###
+## Running Locally
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
+Make sure you have [Go](http://golang.org/doc/install) version 1.12 or newer and the [Heroku Toolbelt](https://toolbelt.heroku.com/) installed.
 
-### Contribution guidelines ###
+```sh
+$ git clone https://github.com/heroku/go-getting-started.git
+$ cd go-getting-started
+$ go build -o bin/go-getting-started -v . # or `go build -o bin/go-getting-started.exe -v .` in git bash
+github.com/mattn/go-colorable
+gopkg.in/bluesuncorp/validator.v5
+golang.org/x/net/context
+github.com/heroku/x/hmetrics
+github.com/gin-gonic/gin/render
+github.com/manucorporat/sse
+github.com/heroku/x/hmetrics/onload
+github.com/gin-gonic/gin/binding
+github.com/gin-gonic/gin
+github.com/heroku/go-getting-started
+$ heroku local
+```
 
-* Writing tests
-* Code review
-* Other guidelines
+Your app should now be running on [localhost:5000](http://localhost:5000/).
 
-### Who do I talk to? ###
+## Deploying to Heroku
 
-* Repo owner or admin
-* Other community or team contact
+```sh
+$ heroku create
+$ git push heroku master
+$ heroku open
+```
+
+or
+
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
+
+
+## Documentation
+
+For more information about using Go on Heroku, see these Dev Center articles:
+
+- [Go on Heroku](https://devcenter.heroku.com/categories/go)
