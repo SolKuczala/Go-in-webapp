@@ -1,0 +1,7 @@
+installed heroku with npm
+heroku local
+heroku login
+heroku git:remote -a so-ku
+git add/commit
+git push heroku master
+

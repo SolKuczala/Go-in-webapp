@@ -1,0 +1,7 @@
+start heroku app remote
+in the repo pushed
+>git push heroku master
+
+start heroku app local
+in the repo
+>heroku local
