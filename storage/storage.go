@@ -28,7 +28,6 @@ func (s *Storage) Connect() {
 	db.SetConnMaxLifetime(time.Minute * 1)
 	db.SetMaxOpenConns(5)
 	db.SetMaxIdleConns(5)
-	log.Fatal("CONECTATED!!!!")
 	defer db.Close()
 }
 
