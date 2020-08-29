@@ -21,10 +21,11 @@ type Storage struct {
 
 func (s *Storage) Connect() {
 	//dbURL := os.Getenv("CLEARDB_DATABASE_URL")
-	db, err := sql.Open("mysql", "b07ba4b7aa60e9:4b7b92b3@eu-cdbr-west-03.cleardb.net/heroku_7e1b871d7963fd5")
+	db, err := sql.Open("mysql", "b07ba4b7aa60e9:4b7b92b3@tcp(eu-cdbr-west-03.cleardb.net:3306)/heroku_7e1b871d7963fd5")
 	if err != nil {
 		panic(err.Error())
 	}
+	log.Println("Database is up!")
 	// See "Important settings" section.
 	db.SetConnMaxLifetime(time.Minute * 1)
 	db.SetMaxOpenConns(5)
