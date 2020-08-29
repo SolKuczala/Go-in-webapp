@@ -17,11 +17,10 @@ var DB *storage.Storage
 
 func main() {
 
-	DB = &storage.Storage{
-		UsersTable: []*storage.User{},
-	}
+	DB = &storage.Storage{}
 
-	DB.Connect()
+	DB.Init()
+	defer DB.Close()
 
 	port := os.Getenv("PORT")
 	if port == "" {

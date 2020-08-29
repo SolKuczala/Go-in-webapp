@@ -1,10 +1,10 @@
-CREATE DATABASE soku;
-USE soku;
+-- CREATE DATABASE `heroku_7e1b871d7963fd5` /*!40100 DEFAULT CHARACTER SET utf8 */;
+USE `heroku_7e1b871d7963fd5`;
 
 CREATE TABLE user_auth(
     ID INT NOT NULL AUTO_INCREMENT,
     email VARCHAR(256) NOT NULL,
-    pass PASSWORD(256) NULL,
+    pass varchar(256),
     google_token VARCHAR(256),
 
     PRIMARY KEY (ID)
@@ -17,7 +17,7 @@ CREATE TABLE user_info(
     address VARCHAR(256),
     phone VARCHAR(256),
 
-    PRIMARY KEY (ID)
+    PRIMARY KEY (ID),
     FOREIGN KEY (user_auth_id) REFERENCES user_auth(id)
 );
 
@@ -33,6 +33,7 @@ VALUES ("pepe@pepe",NULL, "a231d3asd3ass132a46s5d46sad");
 SELECT id, email
 FROM user_auth
 WHERE email="input email" AND pass="input password";
+--no se puede traer where ..AND pas=NULL;
 
 /* get user profile info after login */
 SELECT full_name, address, phone

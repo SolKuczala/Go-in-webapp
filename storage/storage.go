@@ -1,6 +1,7 @@
 package storage
 
 import (
+	"errors"
 	"log"
 	"time"
 
@@ -16,40 +17,40 @@ type User struct {
 }
 
 type Storage struct {
-	UsersTable []*User
+	db *sql.DB
 }
 
-func (s *Storage) Connect() {
-	//dbURL := os.Getenv("CLEARDB_DATABASE_URL")
+func (s *Storage) Close() {
+	s.db.Close()
+}
+
+func (s *Storage) Init() {
 	db, err := sql.Open("mysql", "b07ba4b7aa60e9:4b7b92b3@tcp(eu-cdbr-west-03.cleardb.net:3306)/heroku_7e1b871d7963fd5")
 	if err != nil {
 		panic(err.Error())
 	}
 	log.Println("Database is up!")
-	// See "Important settings" section.
 	db.SetConnMaxLifetime(time.Minute * 1)
 	db.SetMaxOpenConns(5)
 	db.SetMaxIdleConns(5)
-	defer db.Close()
+	s.db = db
 }
 
+/*SaveNewUser Receives the user input to be posted to the DB
+ */
 func (s *Storage) SaveNewUser(user *User) error {
-	/*
-		//create new user (sign up using password)
-		INSERT INTO user_auth(email, pass, google_token)
-		VALUES ("pepe@pepe","123456789", NULL);
-
-		//create new user (sign up using google)
-		INSERT INTO user_auth(email, pass, google_token)
-		VALUES ("pepe@pepe",NULL, "a231d3asd3ass132a46s5d46sad");
-	*/
-
-	//Generate an ID for the user
-	user.ID = 1
-	//Append new user to alluser Array and Save it
-	s.UsersTable = append(s.UsersTable, user)
-	log.Printf("Storage saved new user: %+v\n", user)
-	log.Printf("%+v\n", s.UsersTable)
+	if user.Password == "" {
+		return errors.New("Missing password field")
+	}
+	q := `insert into user_auth(email, pass, google_token) VALUES (?,?,?);`
+	_, err := s.db.Query(q, user.Email, user.Password, nil)
+	if err != nil {
+		return err
+	}
+	//TODO : change the method to asign id
+	id := 1
+	q = `update user_auth(ID) set ID=? where Email=?;`
+	_, err = s.db.Exec(q, id, user.Email)
 	return nil
 }
 
@@ -60,6 +61,18 @@ func (s *Storage) GetUserAuth(user *User) error {
 		FROM user_auth
 		WHERE email="input email" AND pass="input password";
 	*/
+
+	// how to extract the results
+	//for rows.Next() {
+	//var (
+	//id   int64
+	//name string
+	//)
+	//if err := rows.Scan(&id, &name); err != nil {
+	//log.Fatal(err)
+	//}
+	//log.Printf("id %d name is %s\n", id, name)
+	//}
 	user.Email = "pepe@papa"
 	user.ID = 1
 	log.Printf("Storage found login data: %+v\n", user)
