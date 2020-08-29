@@ -2,6 +2,7 @@ package storage
 
 import (
 	"log"
+	"os"
 	"time"
 
 	"database/sql"
@@ -20,7 +21,8 @@ type Storage struct {
 }
 
 func (s *Storage) Connect() {
-	db, err := sql.Open("mysql", "b86f0a6107db68:2a1d431a@eu-cdbr-west-03.cleardb.net/heroku_e02a84e34d46887?reconnect=true")
+	dbURL := os.Getenv("CLEARDB_DATABASE_URL")
+	db, err := sql.Open("mysql", dbURL)
 	if err != nil {
 		panic(err.Error())
 	}
