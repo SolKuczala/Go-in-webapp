@@ -1,7 +1,6 @@
-
 function onSignIn(googleUser) {
     var id_token = googleUser.getAuthResponse().id_token;
-    
+
     var req2Server = new XMLHttpRequest();
     req2Server.open('POST', '/auth/google');
     req2Server.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
@@ -11,4 +10,3 @@ function onSignIn(googleUser) {
 
     req2Server.send('idtoken=' + id_token);
 }
-
