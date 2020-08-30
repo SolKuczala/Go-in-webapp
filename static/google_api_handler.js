@@ -13,7 +13,7 @@ function onSignIn(googleUser) {
         window.location = "/enter-profile-info";
     }
     
-    auth.acces_token = auth.id_token
+    auth.access_token = auth.id_token
     req.send(JSON.stringify(auth))
 }
 
