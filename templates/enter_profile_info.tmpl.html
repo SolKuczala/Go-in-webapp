@@ -1,10 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
     {{template "header.tmpl.html"}}
-</head>
 <body>
-    <p>holaaaaaaa</p>
+    <p>Four fields in this form will be provided for:full name, address, telephone, and email</p>
+    <div class="container">
+
+        <h1>Sign UP</h1>
+        <form action="/action_page.php">
+          <label for="fname">Full name</label><br>
+          <input type="text" id="fname" name="fname"><br>
+          <label for="lname">Address</label><br>
+          <input type="text" id="lname" name="lname"><br><br>
+          <label for="lname">telephone</label><br>
+          <input type="text" id="lname" name="lname"><br><br>
+          <label for="lname">email</label><br>
+          <input type="text" id="lname" name="lname"><br><br>
+          
+          <input type="submit" value="Save & Continue">//will save entries and direct to Main Profile
+          <input type="submit" value="Cancel">//direct to Main profile
+        </form>
+    <div class="container">
+    
+    
     <button>
         <a href="#" onclick="signOut();">Sign out</a>
     </button>

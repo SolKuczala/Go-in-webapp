@@ -15,3 +15,9 @@ function onSignIn(googleUser) {
     
     req.send(JSON.stringify(auth))
 }
+
+function Edit(){
+    const req = new XMLHttpRequest()
+    req.open('GET', '/enter-profile-info')
+    //reditect to enter profile info
+}

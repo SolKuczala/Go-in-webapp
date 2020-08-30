@@ -5,12 +5,13 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"so_ku/frontend"
 	"so_ku/storage"
+	"so_ku/web"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
+	"golang.org/x/oauth2"
 )
 
 var DB *storage.Storage
@@ -40,6 +41,7 @@ func main() {
 	router.GET(apiPrefix+"/user", userGetProfile)
 	router.GET(apiPrefix+"/v1/auth/token", createToken)
 	router.POST(apiPrefix+"/sing-up", signUp) // http -v --json POST 127.0.0.1:3000/api/v1/sing-up id:=0 email=pepe@email password=pass123
+	router.POST(apiPrefix+"/sign-up-Google", signUpGoogle)
 	router.POST(apiPrefix+"/login", login)
 	router.POST(apiPrefix+"/user", userEditProfile)
 	router.POST(apiPrefix+"/logout", logout)
@@ -51,25 +53,25 @@ func main() {
 		})
 	})
 
-	webURL := frontend.WebUrls{
+	webURL := web.WebUrls{
 		Login:            "/login",
 		SignUp:           "/sign-up",
 		EnterProfileInfo: "/enter-profile-info",
 		MainProfile:      "/main-profile",
-		ForgotPassword:   "/forget-pass",
+		ForgotPassword:   "/forgot-pass",
 		ResetPassword:    "/reset-pass",
 	}
 	router.LoadHTMLGlob("templates/*.tmpl.html")
 	router.Static("/static", "static")
 
-	router.GET(webURL.Login, frontend.Login)
-	router.GET(webURL.SignUp, frontend.SignUp)
-	router.GET(webURL.EnterProfileInfo, frontend.EnterProfileInfo)
-	router.GET(webURL.MainProfile, frontend.MainProfile)
-	router.GET(webURL.ForgotPassword, frontend.ForgotPassword)
-	router.GET(webURL.ResetPassword, frontend.ResetPassword)
-	router.POST("/auth/google", frontend.RedirectHandler)
-	router.GET("/cookie", frontend.SetCookie)
+	router.GET(webURL.Login, web.Login)
+	router.GET(webURL.SignUp, web.SignUp)
+	router.GET(webURL.EnterProfileInfo, web.EnterProfileInfo)
+	router.GET(webURL.MainProfile, web.MainProfile)
+	router.GET(webURL.ForgotPassword, web.ForgotPassword)
+	router.GET(webURL.ResetPassword, web.ResetPassword)
+	router.POST("/auth/google", web.RedirectHandler)
+	router.GET("/cookie", web.SetCookie)
 
 	log.Fatal(router.Run(fmt.Sprintf(":%s", port)))
 }
@@ -107,6 +109,44 @@ func signUp(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"status": "ok"})
+}
+func signUpGoogle(c *gin.Context) {
+	var user storage.User
+	if err := c.ShouldBindJSON(&user); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	if err := DB.SaveNewUserFromGoogleAuth(&user); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"status": "ok"})
+}
+
+func RedirectHandler(c *gin.Context) {
+	var token oauth2.Token
+	if err := c.ShouldBindJSON(&token); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	if token.Valid() {
+		user := &storage.User{
+			Gtoken: token.TokenType,
+		}
+		DB.SaveNewUserFromGoogleAuth(user)
+		c.JSON(http.StatusOK, gin.H{"ok": "you are logged in"})
+		return
+	}
+	c.JSON(http.StatusBadRequest, gin.H{"error": "token is not valid"})
+}
+func SetCookie(c *gin.Context) {
+	cookie, err := c.Cookie("so-ku_cookie")
+
+	if err != nil {
+		cookie = "NotSet"
+		c.SetCookie("gin_cookie", "test", 3600, "/", HOST, false, true)
+	}
+	fmt.Printf("Cookie value: %s \n", cookie)
 }
 
 //func validateUser(ctx context.Context, r *http.Request, userName, password string) (auth.Info, error) {

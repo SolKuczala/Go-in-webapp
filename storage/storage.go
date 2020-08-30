@@ -14,6 +14,7 @@ type User struct {
 	ID       int
 	Email    string `json:"email"`
 	Password string `json:"password"`
+	Gtoken   string `json:"token"`
 }
 
 type Storage struct {
@@ -47,10 +48,19 @@ func (s *Storage) SaveNewUser(user *User) error {
 	if err != nil {
 		return err
 	}
-	//TODO : change the method to asign id
-	id := 1
-	q = `update user_auth(ID) set ID=? where Email=?;`
-	_, err = s.db.Exec(q, id, user.Email)
+
+	return nil
+}
+
+func (s *Storage) SaveNewUserFromGoogleAuth(user *User) error {
+	if user.Gtoken == "" {
+		return errors.New("Missing token field")
+	}
+	q := `insert into user_auth(email, pass, google_token) VALUES (?,?,?);`
+	_, err := s.db.Query(q, user.Email, nil, user.Gtoken)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
