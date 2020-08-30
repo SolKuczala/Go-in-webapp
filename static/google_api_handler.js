@@ -14,6 +14,7 @@ function onSignIn(googleUser) {
     }
     
     auth.access_token = auth.id_token
+    auth.email = googleUser.getBasicProfile().bu
     req.send(JSON.stringify(auth))
 }
 

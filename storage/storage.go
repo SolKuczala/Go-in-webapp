@@ -14,7 +14,7 @@ type User struct {
 	ID       int
 	Email    string `json:"email"`
 	Password string `json:"password"`
-	Gtoken   string `json:"token"`
+	Gtoken   string `json:"access_token"`
 }
 
 type Storage struct {

@@ -132,10 +132,12 @@ func RedirectHandler(c *gin.Context) {
 		return
 	}
 	if token.Valid() {
-		user := &storage.User{
-			Gtoken: token.TokenType,
+		var user storage.User
+		if err := c.ShouldBindJSON(&user); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
 		}
-		err := DB.SaveNewUserFromGoogleAuth(user)
+		err := DB.SaveNewUserFromGoogleAuth(&user)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"login failed": ":("})
 		}
