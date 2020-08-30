@@ -5,8 +5,8 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"so_ku/frontend"
 	"so_ku/storage"
-
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -22,13 +22,14 @@ func main() {
 	DB.Init()
 	defer DB.Close()
 
-	port := os.Getenv("PORT")
+	port := os.Getenv("PORT") //5000
 	if port == "" {
 		port = "3000"
 		//log.Fatal("$PORT must be set")
 	}
 
 	router := gin.Default()
+	router.Use(gin.Logger())
 	router.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"message": "pong",
@@ -38,16 +39,37 @@ func main() {
 	apiPrefix := "/api/v1"
 	router.GET(apiPrefix+"/user", userGetProfile)
 	router.GET(apiPrefix+"/v1/auth/token", createToken)
-
-	router.POST(apiPrefix+"/sing-up", signUp)
-	// http -v --json POST 127.0.0.1:3000/api/v1/sing-up id:=0 email=pepe@email password=pass123
-
+	router.POST(apiPrefix+"/sing-up", signUp) // http -v --json POST 127.0.0.1:3000/api/v1/sing-up id:=0 email=pepe@email password=pass123
 	router.POST(apiPrefix+"/sing-up/google", signUpGoogle)
 	router.POST(apiPrefix+"/login", login)
 	router.POST(apiPrefix+"/login/google", loginGoogle)
 	router.POST(apiPrefix+"/user", userEditProfile)
 	router.POST(apiPrefix+"/logout", logout)
 	router.POST(apiPrefix+"/reset-pass", resetPassword)
+
+	router.GET("/", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "Running",
+		})
+	})
+
+	webURL := frontend.WebUrls{
+		Login:            "/login",
+		SignUp:           "/sign-up",
+		EnterProfileInfo: "/enter-profile-info",
+		MainProfile:      "/main-profile",
+		ForgotPassword:   "/forget-pass",
+		ResetPassword:    "/reset-pass",
+	}
+	router.LoadHTMLGlob("templates/*.tmpl.html")
+	router.Static("/static", "static")
+
+	router.GET(webURL.Login, frontend.Login)
+	router.GET(webURL.SignUp, frontend.SignUp)
+	router.GET(webURL.EnterProfileInfo, frontend.EnterProfileInfo)
+	router.GET(webURL.MainProfile, frontend.MainProfile)
+	router.GET(webURL.ForgotPassword, frontend.ForgotPassword)
+	router.GET(webURL.ResetPassword, frontend.ResetPassword)
 
 	log.Fatal(router.Run(fmt.Sprintf(":%s", port)))
 }

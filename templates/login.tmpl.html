@@ -1,0 +1,18 @@
+<html>
+  {{template "header.tmpl.html"}}
+<body>
+  {{template "nav.tmpl.html"}}
+
+  <div class="container">
+    <button>
+      <div class="g-signin2" data-onsuccess="onSignIn"></div>
+    </button>
+    <button>
+      <a href="#" onclick="signOut();">Sign out</a>
+    </button>
+  <div class="container">
+
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+  <script src="so_ku/scripts/google_api_handler.js"></script>
+</body>
+</html>
