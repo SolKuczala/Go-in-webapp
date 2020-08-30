@@ -40,9 +40,7 @@ func main() {
 	router.GET(apiPrefix+"/user", userGetProfile)
 	router.GET(apiPrefix+"/v1/auth/token", createToken)
 	router.POST(apiPrefix+"/sing-up", signUp) // http -v --json POST 127.0.0.1:3000/api/v1/sing-up id:=0 email=pepe@email password=pass123
-	router.POST(apiPrefix+"/sing-up/google", signUpGoogle)
 	router.POST(apiPrefix+"/login", login)
-	router.POST(apiPrefix+"/login/google", loginGoogle)
 	router.POST(apiPrefix+"/user", userEditProfile)
 	router.POST(apiPrefix+"/logout", logout)
 	router.POST(apiPrefix+"/reset-pass", resetPassword)
@@ -70,11 +68,13 @@ func main() {
 	router.GET(webURL.MainProfile, frontend.MainProfile)
 	router.GET(webURL.ForgotPassword, frontend.ForgotPassword)
 	router.GET(webURL.ResetPassword, frontend.ResetPassword)
+	router.POST("/auth/google", frontend.RedirectHandler)
+	router.GET("/cookie", frontend.SetCookie)
 
 	log.Fatal(router.Run(fmt.Sprintf(":%s", port)))
 }
 
-func loggingMiddleware(next http.Handler) http.Handler {
+func logingMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Do stuff here
 		log.Println(r.RequestURI)
@@ -134,10 +134,6 @@ func signUp(c *gin.Context) {
 //	return nil, fmt.Errorf("Invaled token")
 //}
 
-func signUpGoogle(c *gin.Context) {
-
-}
-
 func login(c *gin.Context) {
 	var loginData storage.User
 	if err := c.ShouldBindJSON(&loginData); err != nil {
@@ -159,10 +155,6 @@ func login(c *gin.Context) {
 
 	// TODO: set session
 	c.JSON(http.StatusOK, gin.H{"status": "you are logged in"})
-}
-
-func loginGoogle(c *gin.Context) {
-
 }
 
 func userGetProfile(c *gin.Context) {
