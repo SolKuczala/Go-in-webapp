@@ -2,6 +2,7 @@ package frontend
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -32,7 +33,7 @@ func SignUp(c *gin.Context) {
 }
 
 func EnterProfileInfo(c *gin.Context) {
-	c.HTML(http.StatusOK, "signup.tmpl.html", nil)
+	c.HTML(http.StatusOK, "enter_profile_info.tmpl.html", nil)
 }
 
 func MainProfile(c *gin.Context) {
@@ -47,15 +48,18 @@ func ResetPassword(c *gin.Context) {
 	c.HTML(http.StatusOK, "reset-pass.tmpl.html", nil)
 }
 
+type GoogleLogin struct {
+	IDToken string `json:"id_token,required"`
+}
+
 func RedirectHandler(c *gin.Context) {
-	state := c.Query("state")
-	code := c.Query("code")
-
-	fmt.Printf("%#v", state)
-	fmt.Printf("%#v", code)
-
-	// If no errors, show provider name
-	//c.Writer.Write([]byte("Hi, " + user.FullName))
+	var googleLogin GoogleLogin
+	if err := c.ShouldBindJSON(&googleLogin); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	log.Printf("RECEIVED TOKEN: %s\n", googleLogin.IDToken[:10])
+	c.Redirect(http.StatusTemporaryRedirect, "/enter-profile-info")
 }
 
 func SetCookie(c *gin.Context) {
