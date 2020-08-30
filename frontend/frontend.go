@@ -5,6 +5,8 @@ import (
 	"log"
 	"net/http"
 
+	"golang.org/x/oauth2"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -48,18 +50,18 @@ func ResetPassword(c *gin.Context) {
 	c.HTML(http.StatusOK, "reset-pass.tmpl.html", nil)
 }
 
-type GoogleLogin struct {
-	IDToken string `json:"id_token,required"`
-}
-
 func RedirectHandler(c *gin.Context) {
-	var googleLogin GoogleLogin
-	if err := c.ShouldBindJSON(&googleLogin); err != nil {
+	var token oauth2.Token
+	if err := c.ShouldBindJSON(&token); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	log.Printf("RECEIVED TOKEN: %s\n", googleLogin.IDToken[:10])
-	c.Redirect(http.StatusTemporaryRedirect, "/enter-profile-info")
+	if token.Valid() {
+		log.Printf("RECEIVED TOKEN: %s\n", token.AccessToken[:10])
+		c.Redirect(http.StatusTemporaryRedirect, "/enter-profile-info")
+		return
+	}
+	c.JSON(http.StatusBadRequest, gin.H{"error": "token is not valid"})
 }
 
 func SetCookie(c *gin.Context) {
