@@ -126,17 +126,15 @@ func signUpGoogle(c *gin.Context) {
 }
 
 func RedirectHandler(c *gin.Context) {
-	var token oauth2.Token
-	if err := c.ShouldBindJSON(&token); err != nil {
+	var user storage.User
+	if err := c.ShouldBindJSON(&user); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+
+	token := oauth2.Token{AccessToken: user.Gtoken}
 	if token.Valid() {
-		var user storage.User
-		if err := c.ShouldBindJSON(&user); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
+
 		err := DB.SaveNewUserFromGoogleAuth(&user)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"login failed": ":("})
