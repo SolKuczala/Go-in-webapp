@@ -6,10 +6,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-//const HOST = "localhost"
-
-const HOST = "so-ku.herokuapp"
-
 type WebUrls struct {
 	Login            string
 	SignUp           string

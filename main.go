@@ -14,6 +14,8 @@ import (
 	"golang.org/x/oauth2"
 )
 
+const HOST = "so-ku.herokuapp"
+
 var DB *storage.Storage
 
 func main() {
@@ -70,8 +72,8 @@ func main() {
 	router.GET(webURL.MainProfile, web.MainProfile)
 	router.GET(webURL.ForgotPassword, web.ForgotPassword)
 	router.GET(webURL.ResetPassword, web.ResetPassword)
-	router.POST("/auth/google", web.RedirectHandler)
-	router.GET("/cookie", web.SetCookie)
+	router.POST("/auth/google", RedirectHandler)
+	router.GET("/cookie", SetCookie)
 
 	log.Fatal(router.Run(fmt.Sprintf(":%s", port)))
 }
