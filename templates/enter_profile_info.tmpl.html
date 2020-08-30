@@ -18,7 +18,11 @@
             console.log('User signed out.');
           });
         }
-    </script>
-    
+        function onLoad() {
+            gapi.load('auth2', function() {
+            gapi.auth2.init();
+        });
+    }
+    </script>   
 </body>
 </html>
