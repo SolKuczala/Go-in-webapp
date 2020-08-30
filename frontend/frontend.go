@@ -58,7 +58,7 @@ func RedirectHandler(c *gin.Context) {
 	}
 	if token.Valid() {
 		log.Printf("RECEIVED TOKEN: %s\n", token.AccessToken[:10])
-		c.Redirect(http.StatusTemporaryRedirect, "/enter-profile-info")
+		c.JSON(http.StatusOK, gin.H{"ok": "you are logged in"})
 		return
 	}
 	c.JSON(http.StatusBadRequest, gin.H{"error": "token is not valid"})
