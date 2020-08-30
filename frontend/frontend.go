@@ -2,7 +2,6 @@ package frontend
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 
 	"golang.org/x/oauth2"
@@ -57,7 +56,6 @@ func RedirectHandler(c *gin.Context) {
 		return
 	}
 	if token.Valid() {
-		log.Printf("RECEIVED TOKEN: %s\n", token.AccessToken[:10])
 		c.JSON(http.StatusOK, gin.H{"ok": "you are logged in"})
 		return
 	}
