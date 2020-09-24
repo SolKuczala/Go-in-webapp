@@ -10,6 +10,20 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
+type SQLRows interface {
+	Close() error
+	Next() bool
+	Scan(dest ...interface{}) error
+}
+
+type Database interface {
+	Close() error
+	Exec(query string, args ...interface{}) (sql.Result, error)
+	Query(query string, args ...interface{}) (*sql.Rows, error)
+	SetConnMaxLifetime(d time.Duration)
+	SetMaxIdleConns(n int)
+	SetMaxOpenConns(n int)
+}
 type User struct {
 	ID       int
 	Email    string `json:"email"`
