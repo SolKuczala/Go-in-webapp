@@ -2,11 +2,11 @@ package main
 
 import (
 	"fmt"
+	"go-in-webapp/storage"
+	"go-in-webapp/web"
 	"log"
 	"net/http"
 	"os"
-	"so_ku/storage"
-	"so_ku/web"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -14,7 +14,7 @@ import (
 	"golang.org/x/oauth2"
 )
 
-const HOST = "so-ku.herokuapp"
+const HOST = "go-in-webapp.herokuapp"
 
 var DB *storage.Storage
 

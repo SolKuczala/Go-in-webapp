@@ -3,4 +3,4 @@ build:
     - go
 
 run:
-  web: so_ku
+  web: go-in-webapp

@@ -1,1 +1,1 @@
-web: bin/so_ku
+web: bin/go-in-webapp
