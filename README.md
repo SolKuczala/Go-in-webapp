@@ -3,7 +3,7 @@
 Make sure you have [Go](http://golang.org/doc/install) version 1.12 or newer and the [Heroku Toolbelt](https://toolbelt.heroku.com/) installed.
 
 ```sh
-$ git clone git clone https://SolKuczala@bitbucket.org/SolKuczala/go-in-webapp.git
+$ git clone git clone https://github.com:SolKuczala/Go-in-webapp.git
 $ cd go-in-webapp
 $ go build -o bin/go-in-webapp -v .
 $ heroku local
