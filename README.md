@@ -1,5 +1,7 @@
 WIP
 
+Basic oAuth with Google api
+
 It isn't deployed yet
 
 
